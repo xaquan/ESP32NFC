@@ -4,22 +4,15 @@
 #include <Arduino.h>
 #include <WiFi.h>
 
-// namespace Helpers
-// {
-//     class WifiHelper;
-
-// }
-
 class WifiHelper
 {
-    private:
-
-    public:
-        WifiHelper();
-        WifiHelper(int data);
-        void begin();
-        int test();
-
+private:
+    /* data */
+public:
+    WifiHelper(/* args */);
+    ~WifiHelper();
+    void begin();
 };
+
 
 #endif
