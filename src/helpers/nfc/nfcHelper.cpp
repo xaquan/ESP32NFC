@@ -15,12 +15,14 @@ NFCHelper::~NFCHelper()
 
 
 void NFCHelper::begin(){
+    Serial.println("Card reader initializing...");
     nfc.begin();
 
     uint32_t versiondata = nfc.getFirmwareVersion();
-    if (! versiondata) {
-        Serial.print("Didn't find PN53x board");
-        while (1); // halt
+    if (!versiondata) {
+        Serial.println("Didn't find PN53x board");
+        Serial.print("Restarting...");
+        ESP.restart();
     }
     // Got ok data, print it out!
     Serial.print("Found chip PN5"); Serial.println((versiondata>>24) & 0xFF, HEX);
@@ -34,21 +36,20 @@ void NFCHelper::printHex(const byte *data, uint32_t numBytes){
     nfc.PrintHex(data, numBytes);
 }
 
-uint8_t NFCHelper::ReadNFCCard(void (*callback)(uint8_t uid[], uint8_t uidLength)){
+// Reading NFC card, with timeout in miliseconds
+// If it's not set timeout, it will wait for NFC card forever
+void NFCHelper::ReadNFCCard(void (*callback)(uint8_t uid[], uint8_t uidLength), uint16_t timeout /*=0*/){
   uint8_t res;
 
   uint8_t success;
   uint8_t uid[] = { 0, 0, 0, 0, 0, 0, 0 };  // Buffer to store the returned UID
   uint8_t uidLength;                        // Length of the UID (4 or 7 bytes depending on ISO14443A card type)
 
-  success = nfc.readPassiveTargetID(PN532_MIFARE_ISO14443A, uid, &uidLength);
+  success = nfc.readPassiveTargetID(PN532_MIFARE_ISO14443A, uid, &uidLength, timeout);
 
   if (success) {
-    callback(uid, uidLength);    
-    // CardProcessed();
+    callback(uid, uidLength);
   }
-
-  return res;
 }
 
 

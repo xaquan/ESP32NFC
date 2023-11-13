@@ -2,43 +2,41 @@
 #include <SPI.h>
 #include <Adafruit_PN532.h>
 #include <FirebaseESP32.h>
-#include <helpers/wifiHelper.h>
-#include <helpers/nfcHelper.h>
+#include <helpers/helpers.h>
 
 #define UNLOCK_PIN (23)
+#define WIFI_RESET_PIN (13)
 
-WifiHelper wifiHelper;
+WifiHelper wifiHelper("METDevice");
 NFCHelper nfcHelper;
+ButtonHelper btnHelper;
 
-// uint8_t ReadNFCCard();
 void SuccessReadCard(uint8_t uid[], uint8_t uidLength);
 void CardProcessed();
 void Unlock();
+void startWifiConfig();
 
 void setupPins(){
   pinMode(LED_BUILTIN, OUTPUT);
   pinMode(UNLOCK_PIN, OUTPUT);
+  pinMode(WIFI_RESET_PIN, INPUT);
+  // attachInterrupt(WIFI_RESET_PIN, resetWifi_btn_interrupt, PULLDOWN);  
 }
 
 void setup(void) {
   setupPins();  
   Serial.begin(9600);  
-  Serial.setDebugOutput(true);  
-  while (!Serial) delay(10); // for Leonardo/Micro/Zero
-
-  Serial.println("Hello!");
-
-  
-
+  Serial.setDebugOutput(true);
+  Serial.println("Starting...");
   nfcHelper.begin();
   wifiHelper.begin();
 }
 
-
+// Main loop
 void loop(void) {
-
-  nfcHelper.ReadNFCCard(SuccessReadCard);
-  
+  // resetWifi_btn_press();
+  btnHelper.pressAndHold(WIFI_RESET_PIN, 2000, startWifiConfig);
+  nfcHelper.ReadNFCCard(SuccessReadCard, 100);
 }
 
 
@@ -69,13 +67,22 @@ void SuccessReadCard(uint8_t uid[], uint8_t uidLength){
       Serial.println(cardid);
     }
     Serial.println("");
-    // Unlock(HIGH);
-    delay(1000);
+    CardProcessed();
 }
 
 void CardProcessed(){
+  Unlock(HIGH);
+  delay(1000);
   digitalWrite(LED_BUILTIN, LOW);
   Unlock(LOW);
 }
 
+void startWifiConfig(){  
+  wifiHelper.resetSetting();
+  wifiHelper.startWifiManager(true);
+}
 
+
+void resetWifi_cancel(){
+   Serial.println("cancel");
+}

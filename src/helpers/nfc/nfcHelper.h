@@ -15,7 +15,7 @@ public:
     ~NFCHelper();
     void begin();
     void printHex(const byte *data, uint32_t numBytes);
-    uint8_t ReadNFCCard(void (*callback)(uint8_t uid[], uint8_t uidLength));
+    void ReadNFCCard(void (*callback)(uint8_t uid[], uint8_t uidLength), uint16_t timeout = 0);
 } ;
 
 
