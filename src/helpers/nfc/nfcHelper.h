@@ -1,5 +1,5 @@
-#ifndef NFCHelper_H
-#define NFCHelper_H
+#ifndef NFC_Helper_H
+#define NFC_Helper_H
 
 #include <Wire.h>
 #include <SPI.h>

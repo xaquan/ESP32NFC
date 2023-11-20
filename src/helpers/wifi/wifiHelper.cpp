@@ -5,7 +5,7 @@ bool wm_nonblocking = false; // change to true to use non blocking
 WiFiManagerParameter custom_field;
 
 void saveParamCallback();
-int timeout = 120;
+int timeout = 30;
 
 WifiHelper::WifiHelper(char* apName)
 {

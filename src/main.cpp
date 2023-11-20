@@ -1,8 +1,8 @@
 #include <Wire.h>
 #include <SPI.h>
 #include <Adafruit_PN532.h>
-#include <FirebaseESP32.h>
 #include <helpers/helpers.h>
+#include "models/firebaseModel.h"
 
 #define UNLOCK_PIN (23)
 #define WIFI_RESET_PIN (13)
@@ -10,6 +10,7 @@
 WifiHelper wifiHelper("METDevice");
 NFCHelper nfcHelper;
 ButtonHelper btnHelper;
+FirebaseModel fbModel;
 
 void SuccessReadCard(uint8_t uid[], uint8_t uidLength);
 void CardProcessed();
@@ -30,6 +31,7 @@ void setup(void) {
   Serial.println("Starting...");
   nfcHelper.begin();
   wifiHelper.begin();
+  
 }
 
 // Main loop
@@ -46,6 +48,11 @@ void Unlock(int output){
 
 
 void SuccessReadCard(uint8_t uid[], uint8_t uidLength){
+  fbModel = FirebaseModel();
+  if(Firebase.ready()){
+    Serial.println("FB is ready");
+  }
+
   digitalWrite(LED_BUILTIN, HIGH);
   // Display some basic information about the card
     Serial.println("Found an ISO14443A card");

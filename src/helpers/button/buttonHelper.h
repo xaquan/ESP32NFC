@@ -1,3 +1,5 @@
+#ifndef ButtonHelper_H
+#define ButtonHelper_H
 #include <iostream>
 #include <map>
 #include <Arduino.h>
@@ -15,3 +17,5 @@ public:
     void read();
     void pressAndHold(uint8_t pin, uint16_t holdDuration, void (*callback)(), uint8_t detectionState = HIGH);
 };
+
+#endif
