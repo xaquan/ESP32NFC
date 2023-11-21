@@ -2,7 +2,7 @@
 #include <SPI.h>
 #include <Adafruit_PN532.h>
 #include <helpers/helpers.h>
-#include "models/firebaseModel.h"
+#include "models/firebase/firebaseModel.h"
 
 #define UNLOCK_PIN (23)
 #define WIFI_RESET_PIN (13)
@@ -26,12 +26,12 @@ void setupPins(){
 
 void setup(void) {
   setupPins();  
-  Serial.begin(9600);  
+  Serial.begin(115200);  
   Serial.setDebugOutput(true);
   Serial.println("Starting...");
   nfcHelper.begin();
   wifiHelper.begin();
-  
+  fbModel.begin();  
 }
 
 // Main loop
@@ -48,9 +48,9 @@ void Unlock(int output){
 
 
 void SuccessReadCard(uint8_t uid[], uint8_t uidLength){
-  fbModel = FirebaseModel();
+
   if(Firebase.ready()){
-    Serial.println("FB is ready");
+    Serial.println("Firebase is ready");
   }
 
   digitalWrite(LED_BUILTIN, HIGH);

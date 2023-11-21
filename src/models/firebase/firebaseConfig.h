@@ -2,7 +2,7 @@
 #define FIREBASE_CONFIG_H
 
 
-#define FIREBASE_APIKEY "AIzaSyDNWwWhBJYRc134Qrzk6EsB02NRoag_2to"
+#define FIREBASE_API_KEY "AIzaSyDNWwWhBJYRc134Qrzk6EsB02NRoag_2to"
 #define FIREBASE_AUTH_DOMAIN "cptc-met-iot.firebaseapp.com"
 #define FIREBASE_PROJECT_ID "cptc-met-iot"
 #define FIREBASE_STORAGE_BUCKET "cptc-met-iot.appspot.com"
