@@ -49,9 +49,6 @@ void Unlock(int output){
 
 void SuccessReadCard(uint8_t uid[], uint8_t uidLength){
 
-  if(Firebase.ready()){
-    Serial.println("Firebase is ready");
-  }
 
   digitalWrite(LED_BUILTIN, HIGH);
   // Display some basic information about the card
@@ -72,8 +69,13 @@ void SuccessReadCard(uint8_t uid[], uint8_t uidLength){
       cardid |= uid[3];
       Serial.print("Seems to be a Mifare Classic card #");
       Serial.println(cardid);
+
+      if(Firebase.ready()){
+        fbModel.getDoc();
+        fbModel.addLog(String(cardid));
+      }
     }
-    Serial.println("");
+    
     CardProcessed();
 }
 

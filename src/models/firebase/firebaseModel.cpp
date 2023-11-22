@@ -10,19 +10,19 @@ FirebaseData fbdo;
 FirebaseAuth auth;
 FirebaseConfig config;
 
-void FirebaseModel::getDoc(char* uuid){
-    String docPath = "Devices";
+// void FirebaseModel::getDoc(char* uuid){
+//     String docPath = "Devices";
 
-    if (Firebase.Firestore.getDocument(&fbdo, FIREBASE_PROJECT_ID, "", docPath.c_str(), ""))
-    {
-        Serial.println(fbdo.payload().c_str());
-    }
-    else
-    {
-        Serial.println(fbdo.errorReason());
-    }
+//     if (Firebase.Firestore.getDocument(&fbdo, FIREBASE_PROJECT_ID, "", docPath.c_str(), ""))
+//     {
+//         Serial.println(fbdo.payload().c_str());
+//     }
+//     else
+//     {
+//         Serial.println(fbdo.errorReason());
+//     }
     
-}
+// }
 
 void FirebaseModel::begin(){
     Serial.println("Connecting to Firebase...");
@@ -54,6 +54,37 @@ void FirebaseModel::refreshToken(){
     if (Firebase.isTokenExpired()){
         Firebase.refreshToken(&config);
         Serial.println("Refresh token");
+    }
+}
+
+void FirebaseModel::getDoc(){
+    String docPath = "/Logs/oCagQxLsuIKpEQN4eTfO";
+    if (Firebase.Firestore.getDocument(&fbdo, FIREBASE_PROJECT_ID, "", docPath.c_str()))
+        Serial.printf("Get\n%s\n\n", fbdo.payload().c_str());
+    else
+        Serial.println(fbdo.errorReason());
+}
+
+void FirebaseModel::addLog(String cardId){
+    String docPath = "Logs";
+
+    FirebaseJson content;
+
+    Serial.printf("Card Id %s\n", cardId);
+    Serial.printf("Device Id %s\n", DEVICE_ID);
+
+    content.set("fields/CardId/stringValue", cardId);
+    content.set("fields/DeviceId/stringValue", DEVICE_ID);    
+    content.set("fields/TimeStamp/timestampValue");
+
+
+    content.toString(Serial, true);
+
+    Serial.print("Adding log... ");
+    if(Firebase.Firestore.createDocument(&fbdo, FIREBASE_PROJECT_ID, "", docPath.c_str(), content.raw())){
+        Serial.printf("Add\n%s\n\n", fbdo.payload().c_str());
+    }else{
+        Serial.println(fbdo.errorReason());
     }
 }
 
