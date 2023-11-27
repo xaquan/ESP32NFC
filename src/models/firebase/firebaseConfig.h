@@ -10,6 +10,12 @@
 #define FIREBASE_APP_ID "1:271377445440:web:466b7edb4e6d8bd30965a5"
 
 
+#define PATH_CARDS "Cards"
+#define PATH_LOGS "Logs"
+#define PATH_DEVICES "Devices"
+#define PATH_USERS "Users"
+
+
 #endif // FIREBASECONFIG_H
 
 

@@ -7,9 +7,9 @@ WiFiManagerParameter custom_field;
 void saveParamCallback();
 int timeout = 30;
 
-WifiHelper::WifiHelper(char* apName)
+WifiHelper::WifiHelper()
 {
-  strncpy(_ssid, apName, 32);
+
 }
 
 WifiHelper::~WifiHelper()
@@ -32,9 +32,9 @@ void WifiHelper::startWifiManager(bool forceConfig){
     bool res;   
     wm.setConnectTimeout(timeout);
     if(forceConfig){
-      res = wm.startConfigPortal(_ssid);
+      res = wm.startConfigPortal(DEVICE_SSID);
     }else{            
-      res = wm.autoConnect(_ssid);
+      res = wm.autoConnect(DEVICE_SSID);
     }    
 
     if(!res) {

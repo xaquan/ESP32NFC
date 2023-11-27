@@ -2,23 +2,23 @@
 #define FIREBASE_MODEL_H
 
 #include "firebaseConfig.h"
-#include "..\..\config.h"
-
+#include "../../global.h"
 #include <Firebase_ESP_Client.h>
-// #include "scanLogObj.h"
+#include "../scanLogObj.h"
 
 class FirebaseModel
 {
 private:
-    /* data */
+
 public:
     FirebaseModel(/* args */);
     ~FirebaseModel();
     void begin();
     void refreshToken();
-    // void addDoc(ScanLogObj obj);
-    void getDoc();   
-    void addLog(String cardId); 
+    void getDoc(String uuid); 
+    void addDoc(struct scanLogObj scanLog);
+    void updateDoc(struct scanLogObj scanLog);
+    void deleteDoc(String uuid);
 };
 
 

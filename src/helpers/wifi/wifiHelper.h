@@ -3,14 +3,14 @@
 
 #include <Arduino.h>
 #include <WiFiManager.h>
+#include "config.h"
 
 class WifiHelper
 {
 private:
-    char _ssid[32];
     // void configCallback(WiFiManager *myWiFiManager);
 public:
-    WifiHelper(char* apName);
+    WifiHelper();
     ~WifiHelper();
     WiFiManager wm;
     void begin();

@@ -1,16 +1,17 @@
-#include <Wire.h>
-#include <SPI.h>
-#include <Adafruit_PN532.h>
-#include <helpers/helpers.h>
+
+#include <global.h>
 #include "models/firebase/firebaseModel.h"
 
 #define UNLOCK_PIN (23)
 #define WIFI_RESET_PIN (13)
 
-WifiHelper wifiHelper("METDevice");
+WifiHelper wifiHelper;
 NFCHelper nfcHelper;
 ButtonHelper btnHelper;
 FirebaseModel fbModel;
+
+WiFiUDP wifiUDP;
+NTPClient timeClient(wifiUDP);
 
 void SuccessReadCard(uint8_t uid[], uint8_t uidLength);
 void CardProcessed();
@@ -31,7 +32,10 @@ void setup(void) {
   Serial.println("Starting...");
   nfcHelper.begin();
   wifiHelper.begin();
+  timeClient.begin();
   fbModel.begin();  
+
+  Firebase.setSystemTime(timeClient.getEpochTime());
 }
 
 // Main loop
@@ -57,24 +61,34 @@ void SuccessReadCard(uint8_t uid[], uint8_t uidLength){
     Serial.print("  UID Value: ");
     nfcHelper.printHex(uid, uidLength);
 
-    if (uidLength == 4)
-    {
+    // if (uidLength == 4)
+    // {
       // We probably have a Mifare Classic card ...
       uint32_t cardid = uid[0];
-      cardid <<= 8;
-      cardid |= uid[1];
-      cardid <<= 8;
-      cardid |= uid[2];
-      cardid <<= 8;
-      cardid |= uid[3];
-      Serial.print("Seems to be a Mifare Classic card #");
+      for (int i = 1; i < uidLength; i++)
+      {
+        cardid <<= 8;
+        cardid |= uid[i];
+      }
+      
+
+      // cardid <<= 8;
+      // cardid |= uid[1];
+      // cardid <<= 8;
+      // cardid |= uid[2];
+      // cardid <<= 8;
+      // cardid |= uid[3];
+      Serial.print("Card #");
       Serial.println(cardid);
 
       if(Firebase.ready()){
-        fbModel.getDoc();
-        // fbModel.addLog(String(cardid));
+        // fbModel.getDoc();
+        scanLogObj log;
+        sprintf(log.cardId, "%lu", cardid);
+        log.deviceId = DEVICE_ID;
+        fbModel.addDoc(log);
       }
-    }
+    // }
     
     CardProcessed();
 }

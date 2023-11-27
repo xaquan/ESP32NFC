@@ -1,7 +1,6 @@
 #if !defined(SCAN_LOG_MODEL_H)
 #define SCAN_LOG_MODEL_H
 
-#include "firebaseConfig.h"
 #include "scanLogObj.h"
 
 class ScanLogModel
@@ -11,15 +10,17 @@ private:
 public:
     ScanLogModel(/* args */);
     ~ScanLogModel();
-    ScanLogObj getLog();
-    void addLog(ScanLogObj obj);
+    scanLogObj getLog(char* uuid);
+    void addLog(scanLogObj scanLog);
 };
 
-ScanLogObj ScanLogModel::getLog(){
+scanLogObj ScanLogModel::getLog(char* uuid){
+    struct scanLogObj res;
 
+    return res;
 }
 
-void ScanLogModel::addLog(ScanLogObj obj){
+void ScanLogModel::addLog(scanLogObj scanLog){
     
 }
 
