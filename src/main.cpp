@@ -72,7 +72,7 @@ void SuccessReadCard(uint8_t uid[], uint8_t uidLength){
 
       if(Firebase.ready()){
         fbModel.getDoc();
-        fbModel.addLog(String(cardid));
+        // fbModel.addLog(String(cardid));
       }
     }
     
