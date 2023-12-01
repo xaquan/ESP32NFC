@@ -8,8 +8,17 @@
 FirebaseData fbdo;
 FirebaseAuth auth;
 FirebaseConfig config;
+// MetGlobal global;
+
+// NTPClient timeClient = global.getnNTPClient();
+
+WiFiUDP wifiUDP;
+NTPClient timeClient(wifiUDP);
 
 void FirebaseModel::begin(){
+    timeClient.begin();
+    configTime(0,0, "ntp.pool.org");    
+
     Serial.println("Connecting to Firebase...");
 
     if(WiFi.status() == WL_CONNECTED){
@@ -50,26 +59,44 @@ void FirebaseModel::getDoc(String uuid){
         Serial.println(fbdo.errorReason());
 }
 
-void FirebaseModel::addDoc(struct scanLogObj scanLog){
+void FirebaseModel::addDoc(struct scanLogObj scanLog){    
+    timeClient.update();
     // String docPath = "Logs";
     FirebaseJson content;
+
+    unsigned long epochTime = timeClient.getEpochTime();
+
+    Serial.println(timeClient.isTimeSet());
+
+    // Convert to time structure
+    struct tm *ptm = gmtime((time_t *)&epochTime);
+
+    // Format as Zulu time
+    char buffer[25];
+    strftime(buffer, 25, "%FT%TZ", ptm);
 
     Serial.printf("Card Id %s\n", scanLog.cardId);
     Serial.printf("Device Id %s\n", scanLog.deviceId);
 
     content.set("fields/CardId/stringValue", scanLog.cardId);
     content.set("fields/DeviceId/stringValue", scanLog.deviceId);    
-    // content.set("fields/TimeStamp/timestampValue", scanLog.timeStamp);
+    content.set("fields/TimeStamp/timestampValue", buffer);
 
 
     content.toString(Serial, true);
 
     Serial.print("Adding log... ");
     if(Firebase.Firestore.createDocument(&fbdo, FIREBASE_PROJECT_ID, "", PATH_LOGS, content.raw())){
-        FirebaseJson data;
-        data.setJsonData(fbdo.payload());
+        // FirebaseJson data;
+        FirebaseJsonArray data;
+        data.setJsonArrayData(fbdo.payload());
+        
+        Serial.println(data.raw());
 
-        // Serial.printf("Add\n%s\n\n", data.valueAt(0));
+        // FirebaseJson readDate;        
+        // // data.get(readDate, "createTime");
+        // Serial.println(data.get(readDate, "fields/CardId"))
+        // Serial.printf("Add\n%s\n\n", data);
 
     }else{
         Serial.println(fbdo.errorReason());

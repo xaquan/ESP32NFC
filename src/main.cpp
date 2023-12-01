@@ -4,14 +4,15 @@
 
 #define UNLOCK_PIN (23)
 #define WIFI_RESET_PIN (13)
-
+// MetGlobal global;
 WifiHelper wifiHelper;
 NFCHelper nfcHelper;
 ButtonHelper btnHelper;
 FirebaseModel fbModel;
+// WiFiUDP wiFiUDP;
+// NTPClient timeClient(wiFiUDP);
 
-WiFiUDP wifiUDP;
-NTPClient timeClient(wifiUDP);
+
 
 void SuccessReadCard(uint8_t uid[], uint8_t uidLength);
 void CardProcessed();
@@ -32,11 +33,12 @@ void setup(void) {
   Serial.println("Starting...");
   nfcHelper.begin();
   wifiHelper.begin();
-  timeClient.begin();
-  fbModel.begin();  
+  fbModel.begin();
+  // timeClient.begin();
 
-  Firebase.setSystemTime(timeClient.getEpochTime());
+  // global.setNTPClient(timeClient);
 }
+
 
 // Main loop
 void loop(void) {
@@ -70,14 +72,6 @@ void SuccessReadCard(uint8_t uid[], uint8_t uidLength){
         cardid <<= 8;
         cardid |= uid[i];
       }
-      
-
-      // cardid <<= 8;
-      // cardid |= uid[1];
-      // cardid <<= 8;
-      // cardid |= uid[2];
-      // cardid <<= 8;
-      // cardid |= uid[3];
       Serial.print("Card #");
       Serial.println(cardid);
 
@@ -101,7 +95,7 @@ void CardProcessed(){
 }
 
 void startWifiConfig(){  
-  wifiHelper.resetSetting();
+  // wifiHelper.resetSetting();
   wifiHelper.startWifiManager(true);
 }
 
