@@ -8,7 +8,7 @@
 class WifiHelper
 {
 private:
-    // void configCallback(WiFiManager *myWiFiManager);
+    
 public:
     WifiHelper();
     ~WifiHelper();
