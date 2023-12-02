@@ -16,18 +16,21 @@ WifiHelper::~WifiHelper()
 {
 }
 
+/// @brief Setting up wifi
 void WifiHelper::begin(){    
-    Serial.println("\n Wifi Initializing...");     
-    //Testing mode only
-    // wm.resetSettings();
+    Serial.println("\n Wifi Initializing...");
     WiFi.mode(WIFI_STA);
     startWifiManager(false);
 }
 
+/// @brief Reset wifi setting, erase wifi credential.
 void WifiHelper::resetSetting(){
   wm.resetSettings();
 }
 
+
+/// @brief Start wifi manager portal. Where use can choose wifi network and enter password. After connecting to network. It will store credential to reconnect to wifi nextime.
+/// @param forceConfig 
 void WifiHelper::startWifiManager(bool forceConfig){
     bool res;   
     wm.setConnectTimeout(timeout);
