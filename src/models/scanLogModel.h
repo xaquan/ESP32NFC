@@ -10,17 +10,17 @@ private:
 public:
     ScanLogModel(/* args */);
     ~ScanLogModel();
-    scanLogObj getLog(char* uuid);
-    void addLog(scanLogObj scanLog);
+    ScanLogObj getLog(char* uuid);
+    void addLog(ScanLogObj scanLog);
 };
 
-scanLogObj ScanLogModel::getLog(char* uuid){
-    struct scanLogObj res;
+ScanLogObj ScanLogModel::getLog(char* uuid){
+    struct ScanLogObj res;
 
     return res;
 }
 
-void ScanLogModel::addLog(scanLogObj scanLog){
+void ScanLogModel::addLog(ScanLogObj scanLog){
     
 }
 

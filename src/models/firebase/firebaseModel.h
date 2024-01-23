@@ -5,6 +5,7 @@
 #include "../../global.h"
 #include <Firebase_ESP_Client.h>
 #include "../scanLogObj.h"
+#include "../cardObj.h"
 
 class FirebaseModel
 {
@@ -15,9 +16,9 @@ public:
     ~FirebaseModel();
     void begin();
     void refreshToken();
-    void getDoc(String uuid); 
-    void addDoc(struct scanLogObj scanLog);
-    void updateDoc(struct scanLogObj scanLog);
+    CardObj getUserByCardId(String uuid); 
+    void addActivity(struct ScanLogObj scanLog);
+    void updateDoc(struct ScanLogObj scanLog);
     void deleteDoc(String uuid);
 };
 

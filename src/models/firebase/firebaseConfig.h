@@ -11,9 +11,11 @@
 
 
 #define PATH_CARDS "Cards"
-#define PATH_LOGS "Logs"
-#define PATH_DEVICES "Devices"
+#define PATH_ACTIVITIES "Activities"
+#define PATH_DEVICES "Equipment"
 #define PATH_USERS "Users"
+// #define PATH_EQUIPMENT "Equipment"
+// #define PATH_ACTIVITIES "Activities"
 
 
 #endif // FIREBASECONFIG_H

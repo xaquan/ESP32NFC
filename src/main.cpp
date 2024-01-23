@@ -3,7 +3,7 @@
 #include "models/firebase/firebaseModel.h"
 
 #define UNLOCK_PIN (23)
-#define WIFI_RESET_PIN (13)
+#define WIFI_RESET_PIN (32)
 // MetGlobal global;
 WifiHelper wifiHelper;
 NFCHelper nfcHelper;
@@ -34,17 +34,13 @@ void setup(void) {
   nfcHelper.begin();
   wifiHelper.begin();
   fbModel.begin();
-  // timeClient.begin();
-
-  // global.setNTPClient(timeClient);
 }
 
 
 // Main loop
 void loop(void) {
-  // resetWifi_btn_press();
   btnHelper.pressAndHold(WIFI_RESET_PIN, 2000, startWifiConfig);
-  nfcHelper.ReadNFCCard(SuccessReadCard, 100);
+  nfcHelper.ReadNFCCard(SuccessReadCard, 500);
 }
 
 
@@ -55,17 +51,13 @@ void Unlock(int output){
 
 void SuccessReadCard(uint8_t uid[], uint8_t uidLength){
 
-
   digitalWrite(LED_BUILTIN, HIGH);
   // Display some basic information about the card
-    Serial.println("Found an ISO14443A card");
+    Serial.println("Found a card");
     Serial.print("  UID Length: ");Serial.print(uidLength, DEC);Serial.println(" bytes");
     Serial.print("  UID Value: ");
     nfcHelper.printHex(uid, uidLength);
 
-    // if (uidLength == 4)
-    // {
-      // We probably have a Mifare Classic card ...
       uint32_t cardid = uid[0];
       for (int i = 1; i < uidLength; i++)
       {
@@ -76,15 +68,25 @@ void SuccessReadCard(uint8_t uid[], uint8_t uidLength){
       Serial.println(cardid);
 
       if(Firebase.ready()){
+        
         // fbModel.getDoc();
-        scanLogObj log;
-        sprintf(log.cardId, "%lu", cardid);
+
+        CardObj cardObj = fbModel.getUserByCardId(String(cardid));
+        if (cardObj.isActive)
+        {
+          CardProcessed();
+        }
+
+        ScanLogObj log;
+        // sprintf(log.cardId, "%lu", cardid);
         log.deviceId = DEVICE_ID;
-        fbModel.addDoc(log);
+        log.userId = cardObj.userId;
+        log.cardId = cardid;
+        fbModel.addActivity(log);
+        
       }
-    // }
     
-    CardProcessed();
+    
 }
 
 void CardProcessed(){

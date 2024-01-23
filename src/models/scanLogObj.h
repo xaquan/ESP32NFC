@@ -1,12 +1,14 @@
 #ifndef SCANLOGOBJ_H
 #define SCANLOGOBJ_H
 
-struct scanLogObj
+struct ScanLogObj
 {
-    char* uuid;
-    char* cardId;
-    char* deviceId;
-    char* timeStamp;
+    String uuid;
+    String cardId;
+    String deviceId;
+    String timeStamp;
+    String userId;
+
 };
 
 
