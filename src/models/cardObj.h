@@ -2,12 +2,13 @@
 #if !defined(CARDOBJ_H)
 #define CARDOBJ_H
 
-struct CardObj
+class CardObj
 {
+    public:
     String cardId;
     String userId;
     String userName;
-    bool isActive;
+    bool isActive = false;
     String lastScanned;
 };
 

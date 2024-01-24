@@ -68,7 +68,7 @@ CardObj FirebaseModel::getUserByCardId(String cardId)
         // Serial.printf("Get\n%s\n\n", fbdo.payload().c_str());
         FirebaseJson data;
         data.setJsonData(fbdo.payload());
-        cardObj.cardId = cardId;
+        // cardObj.cardId = cardId;
 
         FirebaseJsonData isActive;
         FirebaseJsonData userId;
@@ -78,26 +78,31 @@ CardObj FirebaseModel::getUserByCardId(String cardId)
         data.get(isActive, "fields/isActive/booleanValue");
         data.get(userId, "fields/userId/stringValue");
         data.get(cardId, "fields/cardId/stringValue");
-        data.get(lastScanned, "fields/lastScanned/stringValue");
+        data.get(lastScanned, "fields/lastScanned/timestampValue");
 
-        if (lastScanned.success)
-        {
+        data.toString(Serial, true);
+
+        // if (lastScanned.success)
+        // {
             cardObj.isActive = isActive.boolValue;
             cardObj.cardId = cardId.stringValue;
             cardObj.userId = userId.stringValue;
             cardObj.lastScanned =lastScanned.stringValue;
-
+            
+            // Serial.println("cardObj.lastScanned");
             // Serial.println(cardObj.lastScanned);
-        }
+        // }
+        
     }
     else
-    {
+    {        
         Serial.println("Not found");
         Serial.println(fbdo.errorReason());
     }
-
+    
     return cardObj;
 }
+
 
 void FirebaseModel::addActivity(struct ScanLogObj scanLog)
 {
@@ -109,7 +114,7 @@ void FirebaseModel::addActivity(struct ScanLogObj scanLog)
 
     unsigned long epochTime = timeClient.getEpochTime();
 
-    Serial.println(timeClient.isTimeSet());
+    // Serial.println(timeClient.isTimeSet());
 
     // Convert to time structure
     struct tm *ptm = gmtime((time_t *)&epochTime);
@@ -118,28 +123,29 @@ void FirebaseModel::addActivity(struct ScanLogObj scanLog)
     char buffer[25];
     strftime(buffer, 25, "%FT%TZ", ptm);
 
-    Serial.printf("Card Id %s\n", scanLog.cardId);
-    Serial.printf("Device Id %s\n", scanLog.deviceId);
+    // Serial.printf("Card Id %s\n", scanLog.cardId);
+    // Serial.printf("Device Id %s\n", scanLog.deviceId);
 
     content.set("fields/cardId/stringValue", scanLog.cardId);
     content.set("fields/deviceId/stringValue", scanLog.deviceId);
     content.set("fields/timestamp/timestampValue", buffer);
 
-    content.toString(Serial, true);
+    // content.toString(Serial, true);
 
-    Serial.print("Adding log... ");
+    Serial.print("Adding log...");
     if (Firebase.Firestore.createDocument(&fbdo, FIREBASE_PROJECT_ID, "", PATH_ACTIVITIES, content.raw()))
     {
         // FirebaseJson data;
         FirebaseJsonArray data;
         data.setJsonArrayData(fbdo.payload());
 
-        Serial.println(data.raw());
+        // Serial.println(data.raw());
 
         // FirebaseJson readDate;
         // // data.get(readDate, "createTime");
         // Serial.println(data.get(readDate, "fields/CardId"))
         // Serial.printf("Add\n%s\n\n", data);
+        Serial.print("Added log!");
     }
     else
     {

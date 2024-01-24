@@ -72,27 +72,26 @@ void SuccessReadCard(uint8_t uid[], uint8_t uidLength){
         // fbModel.getDoc();
 
         CardObj cardObj = fbModel.getUserByCardId(String(cardid));
+        Serial.print(cardObj.isActive);
         if (cardObj.isActive)
         {
           CardProcessed();
         }
 
         ScanLogObj log;
-        // sprintf(log.cardId, "%lu", cardid);
         log.deviceId = DEVICE_ID;
         log.userId = cardObj.userId;
         log.cardId = cardid;
-        fbModel.addActivity(log);
-        
+        fbModel.addActivity(log);        
       }
     
-    
+      
+    digitalWrite(LED_BUILTIN, LOW);
 }
 
 void CardProcessed(){
   Unlock(HIGH);
   delay(1000);
-  digitalWrite(LED_BUILTIN, LOW);
   Unlock(LOW);
 }
 
