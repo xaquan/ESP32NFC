@@ -4,11 +4,13 @@
 
 #define UNLOCK_PIN (23)
 #define WIFI_RESET_PIN (32)
+#define LED_SETTING_UP (15)
 // MetGlobal global;
 WifiHelper wifiHelper;
 NFCHelper nfcHelper;
 ButtonHelper btnHelper;
 FirebaseModel fbModel;
+BlinkerHelper blinkerHelper;
 // WiFiUDP wiFiUDP;
 // NTPClient timeClient(wiFiUDP);
 
@@ -30,6 +32,16 @@ void setup(void) {
   setupPins();  
   Serial.begin(115200);  
   Serial.setDebugOutput(true);
+
+
+  
+  if (blinkerHelper.isExisted(WIFI_RESET_PIN))
+  {
+    Serial.println("Pin is not exist");
+  }
+  
+  blinkerHelper.addBlinker(15, 500);
+
   Serial.println("Starting...");
   nfcHelper.begin();
   wifiHelper.begin();
@@ -41,6 +53,7 @@ void setup(void) {
 void loop(void) {
   btnHelper.pressAndHold(WIFI_RESET_PIN, 2000, startWifiConfig);
   nfcHelper.ReadNFCCard(SuccessReadCard, 500);
+  blinkerHelper.startBlinking();
 }
 
 
@@ -83,8 +96,7 @@ void SuccessReadCard(uint8_t uid[], uint8_t uidLength){
         log.userId = cardObj.userId;
         log.cardId = cardid;
         fbModel.addActivity(log);        
-      }
-    
+      }    
       
     digitalWrite(LED_BUILTIN, LOW);
 }

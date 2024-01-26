@@ -128,6 +128,7 @@ void FirebaseModel::addActivity(struct ScanLogObj scanLog)
 
     content.set("fields/cardId/stringValue", scanLog.cardId);
     content.set("fields/deviceId/stringValue", scanLog.deviceId);
+    content.set("fields/userId/timestampValue", scanLog.userId);
     content.set("fields/timestamp/timestampValue", buffer);
 
     // content.toString(Serial, true);
@@ -139,7 +140,7 @@ void FirebaseModel::addActivity(struct ScanLogObj scanLog)
         FirebaseJsonArray data;
         data.setJsonArrayData(fbdo.payload());
 
-        // Serial.println(data.raw());
+        Serial.println(data.raw());
 
         // FirebaseJson readDate;
         // // data.get(readDate, "createTime");
