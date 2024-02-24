@@ -9,15 +9,20 @@
 #include <NTPClient.h>
 #include "config.h"
 
-// class MetGlobal
-// {
-// private:
-//     // NTPClient _timeClient;
-// public:
-//     MetGlobal(/* args */);
-//     ~MetGlobal();
-//     // NTPClient getnNTPClient();
-//     // void setNTPClient(NTPClient timeClient);
-// };
+class MetGlobal
+{
+private:
+    // NTPClient _timeClient;    
+    bool loggedIn = false;
+public:
+    MetGlobal(/* args */);
+    ~MetGlobal();
+
+    void LogInSuccess();
+    void LogOut();
+    bool isLogged();
+    // NTPClient getnNTPClient();
+    // void setNTPClient(NTPClient timeClient);
+};
 
 #endif // MET_GLOBAL

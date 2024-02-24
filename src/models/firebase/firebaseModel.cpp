@@ -128,7 +128,7 @@ void FirebaseModel::addActivity(struct ScanLogObj scanLog)
 
     content.set("fields/cardId/stringValue", scanLog.cardId);
     content.set("fields/deviceId/stringValue", scanLog.deviceId);
-    content.set("fields/userId/timestampValue", scanLog.userId);
+    content.set("fields/userId/stringValue", scanLog.userId);
     content.set("fields/timestamp/timestampValue", buffer);
 
     // content.toString(Serial, true);
